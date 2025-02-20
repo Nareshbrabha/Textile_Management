@@ -1,0 +1,703 @@
+<?php
+session_start(); // Ensure the session is started
+if (!isset($_SESSION['tex_id'])) {
+    // Redirect to login page if not logged in
+    header("Location: tlogin.php");
+    exit();
+}
+
+include('db.php'); // Include the configuration file
+
+// Fetch complaints only for this faculty (if necessary)
+$faculty_id = $_SESSION['tex_id']; // Assuming 'faculty_id' is stored in session
+
+$query = "SELECT * FROM orders WHERE order_id = '$order_id'";
+$result = mysqli_query($conn, $query);
+
+$sql5 = "SELECT * FROM orders WHERE status IN (1,2,4,6,,9) AND order_id = '$order_id'";
+$sql1 = "SELECT * FROM orders WHERE status IN (7,10,11,17,18) AND order_id = '$order_id'";
+$sql2 = "SELECT * FROM orders WHERE status = 16 AND order_id = '$order_id'";
+$sql3 = "SELECT * FROM orders WHERE status IN (3,5,19,20) AND faculty_id = '$order_id'";
+$sql4 = "SELECT * FROM orders WHERE status = 15 AND order_id = '$order_id'";
+
+$result5 = mysqli_query($conn, $sql5);
+$result1 = mysqli_query($conn, $sql1);
+$result2 = mysqli_query($conn, $sql2);
+$result3 = mysqli_query($conn, $sql3);
+$result4 = mysqli_query($conn, $sql4);
+
+$row_count5 = mysqli_num_rows($result5);
+$row_count1 = mysqli_num_rows($result1);
+$row_count2 = mysqli_num_rows($result2);
+$row_count3 = mysqli_num_rows($result3);
+$row_count4 = mysqli_num_rows($result4);
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+  <meta name="description" content="POS - Bootstrap Admin Template" />
+  <meta name="keywords"
+    content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern,  html5, responsive" />
+  <meta name="author" content="Dreamguys - Bootstrap Admin Template" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Textile</title>
+
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.jpg" />
+
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+
+  <link rel="stylesheet" href="assets/css/animate.css" />
+
+  <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.min.css" />
+
+  <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css" />
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+  <div id="global-loader">
+    <div class="whirly-loader"></div>
+  </div>
+
+  <div class="main-wrapper">
+    <div class="header">
+      <div class="header-left active">
+        <a href="index.html" class="logo">
+          <img src="images/logo.bg.png" alt="" />
+        </a>
+        <a href="index.html" class="logo-small">
+          <img src="" alt="" />
+        </a>
+        <a id="toggle_btn" href="javascript:void(0);"> </a>
+      </div>
+
+      <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+        <span class="bar-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </a>
+
+      <ul class="nav user-menu">
+        <li class="nav-item">
+          <div class="top-nav-search">
+            <a href="javascript:void(0);" class="responsive-search">
+              <i class="fa fa-search"></i>
+            </a>
+            <form action="#">
+              <div class="searchinputs">
+                <input type="text" placeholder="Search Here ..." />
+                <div class="search-addon">
+                  <span><img src="assets/img/icons/closes.svg" alt="img" /></span>
+                </div>
+              </div>
+              <a class="btn" id="searchdiv"><img src="assets/img/icons/search.svg" alt="img" /></a>
+            </form>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown has-arrow flag-nav">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="javascript:void(0);" role="button">
+            <img src="assets/img/flags/us1.png" alt="" height="20" />
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a href="javascript:void(0);" class="dropdown-item">
+              <img src="assets/img/flags/us.png" alt="" height="16" /> English
+            </a>
+            <a href="javascript:void(0);" class="dropdown-item">
+              <img src="assets/img/flags/fr.png" alt="" height="16" /> French
+            </a>
+            <a href="javascript:void(0);" class="dropdown-item">
+              <img src="assets/img/flags/es.png" alt="" height="16" /> Spanish
+            </a>
+            <a href="javascript:void(0);" class="dropdown-item">
+              <img src="assets/img/flags/de.png" alt="" height="16" /> German
+            </a>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+            <img src="assets/img/icons/notification-bing.svg" alt="img" />
+            <span class="badge rounded-pill">4</span>
+          </a>
+          <div class="dropdown-menu notifications">
+            <div class="topnav-dropdown-header">
+              <span class="notification-title">Notifications</span>
+              <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
+            </div>
+
+            <div class="topnav-dropdown-footer">
+              <a href="activities.html">View all Notifications</a>
+            </div>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown has-arrow main-drop">
+          <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+            <span class="user-img"><img src="assets/img/profiles/avator1.jpg" alt="" />
+              <span class="status online"></span></span>
+          </a>
+          <div class="dropdown-menu menu-drop-user">
+            <div class="profilename">
+              <div class="profileset">
+                <span class="user-img"><img src="assets/img/profiles/avator1.jpg" alt="" />
+                  <span class="status online"></span></span>
+                <div class="profilesets">
+                  <h6>John Doe</h6>
+                  <h5>Admin</h5>
+                </div>
+              </div>
+              <hr class="m-0" />
+              <a class="dropdown-item" href="profile.html">
+                <i class="me-2" data-feather="user"></i> My Profile</a>
+              <a class="dropdown-item" href="generalsettings.html"><i class="me-2"
+                  data-feather="settings"></i>Settings</a>
+              <hr class="m-0" />
+              <a class="dropdown-item logout pb-0" href="signin.html"><img src="assets/img/icons/log-out.svg"
+                  class="me-2" alt="img" />Logout</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="dropdown mobile-user-menu">
+        <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+          aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="profile.html">My Profile</a>
+          <a class="dropdown-item" href="generalsettings.html">Settings</a>
+          <a class="dropdown-item" href="signin.html">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+          <ul>
+            <li class="active">
+              <a href="index.html"><img src="assets/img/icons/dashboard.svg" alt="img"><span>
+                  Dashboard</span> </a>
+            </li>
+            <li class="submenu">
+              <a href="javascript:void(0);"><img src="assets/img/icons/product.svg" alt="img"><span>
+                  Textile</span> <span class="menu-arrow"></span></a>
+              <ul>
+                <li><a href="ordersdetail.html">Orders</a></li>
+              </ul>
+            </li>
+            <li class="submenu">
+              <a href="javascript:void(0);"><img src="assets/img/icons/product.svg" alt="img"><span>
+                  Manufacturer</span> <span class="menu-arrow"></span></a>
+              <ul>
+                <li><a href="manu.html">Orders</a></li>
+              </ul>
+            </li>
+            <li class="submenu">
+              <a href="javascript:void(0);"><img src="assets/img/icons/product.svg" alt="img"><span>
+                  Transportation</span> <span class="menu-arrow"></span></a>
+              <ul>
+                <li><a href="transportation.html">Orders</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-wrapper">
+      <div class="content container-fluid">
+        <div class="page-header">
+          <div class="row">
+            <ul class="nav nav-tabs mb-3 custom-tabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#new-orders" role="tab">
+                  <span class="hidden-sm-up"></span>
+                  <span class="hidden-xs-down"><i class="ti-desktop"></i><b> New orders</b></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#main-orders" role="tab">
+                  <span class="hidden-sm-up"></span>
+                  <span class="hidden-xs-down"><i class="ti-desktop"></i><b> Main orders</b></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#sample-orders" role="tab">
+                  <span class="hidden-sm-up"></span>
+                  <span class="hidden-xs-down"><i class="ti-tablet"></i><b>Sample orders</b></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#transportation-status" role="tab">
+                  <span class="hidden-sm-up"></span>
+                  <span class="hidden-xs-down"><i class="bi bi-people-fill"></i><b> Transportation status</b></span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#completed-orders" role="tab">
+                  <span class="hidden-sm-up"></span>
+                  <span class="hidden-xs-down"><i class="ti-book"></i><b> Completed Orders</b></span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- new-order -->
+        <div class="tab-content">
+          <div class="tab-pane active" id="new-orders" role="tabpanel">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div>
+                    <button type="button" class="btn btn-info float-right" data-bs-toggle="modal"
+                      data-bs-target="#new-ordersmodal">Add Orders</button></button>
+                    <br>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table datanew no-footer">
+                        <thead>
+                          <tr>
+                            <th>S No</th>
+                            <th>Name of the Order</th>
+                            <th>Deadline</th>
+                            <th>Description</th>
+                            <th>View</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+  <?php
+  $s = 1;
+  while ($row = // your database query logic here) { // Add your query logic to fetch rows
+  ?>
+    <tr>
+      <td class="text-center">
+        <?php echo $s; ?>
+      </td>
+      <td class="text-center">
+        <?php echo $row['order_name']; ?>
+      </td>
+      <td class="text-center">
+        <?php echo $row['deadline']; ?>
+      </td>
+      <td>
+        <center>
+          <button type="button" data-problemid class="btn btndesc" id="seeproblem"
+            data-bs-toggle="modal" data-bs-target="#description" value='<?php echo $row['id']; ?>'>
+            <i class="fas fa-eye" style="font-size: 20px;"></i>
+          </button>
+        </center>
+      </td>
+
+      <td>
+        <center>
+          <button type="button" class="btn showImage" value="<?php echo $row['id']; ?>"
+            data-bs-toggle="modal" data-bs-target="#imageModal1" data-task-id='<?php echo htmlspecialchars($row['id']); ?>'>
+            <i class="fas fa-image" style="font-size: 20px;"></i>
+          </button>
+        </center>
+      </td>
+      <td class="text-center">
+        <?php if ($row['status'] == 1) { ?>
+          <center>
+            <button class="btn btndelete btn-danger" type="button" value="<?php echo $row['id']; ?>">
+              <i class="fas fa-times"></i>
+            </button>
+          </center>
+        <?php } else { ?>
+          <span class="badge bg-success" style="font-size: 1.2em; color: #000; padding: 0.25em 0.5em;">
+            <?php echo $statusMessage; ?>
+          </span>
+        <?php } ?>
+      </td>
+    </tr>
+  <?php
+    $s++;
+  }
+  ?>
+</tbody>
+
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="main-orders" role="tabpanel">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">Main Order Info</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table datanew no-footer">
+                        <thead>
+                          <tr>
+                            <th>S No</th>
+                            <th>Name of the Order</th>
+                            <th>Amount Coated</th>
+                            <th>Textile Name</th>
+                            <th>Progress</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php
+                          $s = 1;
+                          while ($row = mysqli_fetch_assoc($result1)) {
+                          ?>
+                          <tr>
+                            <td class="text-center">
+                              <?php echo $s; ?>
+                            </td>
+                            <td class="text-center">
+                              <?php echo $row['order_name]; ?>
+                            </td>
+                            <td class="text-center">
+                              <?php echo $row['amount']; ?>
+                            </td>
+                            <td class="text-center">
+                              <?php echo $row['manu_name']; ?>
+                            </td>
+
+                            <td class="text-center">
+                              <?php if ($row['status'] == 11) { ?>
+                              <button type="button" class="btn btn-info "
+                                data-problem-id="<?php echo $row['id']; ?>"></button>
+                              <?php } 
+                                  </td>
+                              </tr>
+                          <?php
+                              $s++;
+                          }
+                          ?>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="sample-orders" role="tabpanel">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">Sample Order Info</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table datanew no-footer">
+                        <thead>
+                          <tr>
+                            <th>S No</th>
+                            <th>Name of the Order</th>
+                            <th>Amount Coated</th>
+                            <th>Textile Name</th>
+                            <th>Progress</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php
+                          $s = 1;
+                          while ($row = mysqli_fetch_assoc($result1)) {
+                          ?>
+                          <tr>
+                            <td class="text-center">
+                              <?php echo $s; ?>
+                            </td>
+                            <td class="text-center">
+                              <?php echo $row['order_name]; ?>
+                            </td>
+                            <td class="text-center">
+                              <?php echo $row['amount']; ?>
+                            </td>
+                            <td class="text-center">
+                              <?php echo $row['manu_name']; ?>
+                            </td>
+
+                            <td class="text-center">
+                              <?php if ($row['status'] == 11) { ?>
+                              <!-- Button to open the feedback modal -->
+                              <button type="button" class="btn btn-info "
+                                data-problem-id="<?php echo $row['id']; ?>"></button>
+                              <?php } 
+                                  </td>
+                              </tr>
+                          <?php
+                              $s++;
+                          }
+                          ?>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="transportation-status" role="tabpanel">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">Transportation</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table datanew no-footer">
+                        <thead>
+                          <tr>
+                            <th>S No</th>
+                            <th>Name of the Order</th>
+                            <th>Order Type</th>
+                            <th>Textile Name</th>
+                            <th>Progress</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <!-- Add rows here -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="completed-orders" role="tabpanel">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h4 class="card-title">History</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table datanew no-footer">
+                        <thead>
+                          <tr>
+                            <th>S No</th>
+                            <th>Name of the Order</th>
+                            <th>Order Type</th>
+                            <th>Textile Name</th>
+                            <th>Transportation Name</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <!-- Add rows here -->
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- new-orders modal -->
+    <div class="modal fade" id="new-ordersmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New Orders</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="add-new-orders">
+              <div class="form-group row">
+                <label class="col-form-label col-md-2">Name of the order</label>
+                <div class="col-md-10">
+                  <input type="text" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Date</label>
+                <input type="text" id="date" class="form-control">
+                <span class="form-text text-muted">dd/mm/yyyy</span>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-md-2">Order Type</label>
+                <div class="col-md-10">
+                  <select class="form-select">
+                    <option>-- Select --</option>
+                    <option>Main Order</option>
+                    <option>Sample Order</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-md-2">Location</label>
+                <div class="col-md-10">
+                  <input type="text" class="form-control">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-md-2">Amount</label>
+                <div class="col-md-10">
+                  <input type="text" class="form-control" placeholder="Placeholder">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-md-2">Sample Image</label>
+                <div class="col-md-10">
+                  <input class="form-control" type="file">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-form-label col-md-2">Description</label>
+                <div class="col-md-10">
+                  <textarea rows="5" cols="5" class="form-control" placeholder="Enter text here"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Deadline</label>
+                <input type="text" id="date" class="form-control">
+                <span class="form-text text-muted">dd/mm/yyyy</span>
+              </div>
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary">Add Order</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Image Modal-->
+    <div id="imageModal1" class="modal fade" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="imageModalLabel">View Image</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <img id="modalImage" src="" alt="Image Preview" style="max-width: 100%; display: none;" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Description Modal-->
+    <div class="modal fade" id="description" tabindex="-1" aria-labelledby="descriptionLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="descriptionLabel">Problem Description</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="view-description">
+            <div class="modal-body"
+              style="padding: 15px; font-size: 1.1em; color: #333; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+              <ol class="list-group list-group-numbered" style="margin-bottom: 0;">
+                <li class="list-group-item d-flex justify-content-between align-items-start"
+                  style="padding: 10px; background-color: #fff;">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold" style="font-size: 1.2em; font-weight: 600; color: #007bff;">Order Type</div>
+                    <b><span id="order_type" style="color: #555;"></span></b>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start"
+                  style="padding: 10px; background-color: #fff;">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold" style="font-size: 1.2em; font-weight: 600; color: #007bff;">Amount Coated</div>
+                    <b><span id="amount" style="color: #555;"></span></b>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start"
+                  style="padding: 10px; background-color: #fff;">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold" style="font-size: 1.2em; font-weight: 600; color: #007bff;">Description</div>
+                    <b><span id="o_description" style="color: #555;padding-top:5px;"></span></b>
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+  <script src="assets/js/jquery-3.6.0.min.js"></script>
+
+  <script src="assets/js/feather.min.js"></script>
+
+  <script src="assets/js/jquery.slimscroll.min.js"></script>
+
+  <script src="assets/js/jquery.dataTables.min.js"></script>
+  <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+  <script src="assets/js/script.js"></script>
+  <script>
+    // Add Faculty complaints to database
+    $(document).on('submit', '#addnewuser', function (e) {
+      e.preventDefault(); // Prevent form from submitting normally
+      var formData = new FormData(this);
+      $.ajax({
+        type: "POST",
+        url: "texbackend.php",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          var res = typeof response === 'string' ? JSON.parse(response) : response;
+          if (res.status === 200) {
+            swal("Complaint Submitted!", "", "success");
+            $('#cmodal').modal('hide');
+            $('#addnewuser')[0].reset(); // Reset the form
+            $('#navref1').load(location.href + " #navref1");
+            $('#navref2').load(location.href + " #navref2");
+            $('#navref3').load(location.href + " #navref3");
+            $('#dashref').load(location.href + " #dashref");
+
+            $('#user').DataTable().destroy();
+            $("#user").load(location.href + " #user > *", function () {
+              $('#user').DataTable();
+            });
+          } else {
+            console.error("Error:", res.message);
+            alert("Something went wrong! Try again.");
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.error("AJAX Error:", textStatus, errorThrown);
+          alert("Failed to process response. Please try again.");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
